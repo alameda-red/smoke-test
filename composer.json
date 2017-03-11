@@ -1,0 +1,21 @@
+{
+    "name": "alameda/smoke-test",
+    "description": "A tool to boot your Symfony application and check your services",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sebastian Kuhlmann",
+            "email": "zebba@hotmail.de"
+        }
+    ],
+    "require": {
+        "php": "~7.0",
+        "symfony/console": "~2.8|~3.0",
+        "symfony/options-resolver": "~2.8|~3.0",
+        "symfony/process": "~2.8|~3.0"
+    },
+    "autoload": {
+        "psr-4": { "Alameda\\Quality\\": "Alameda/Quality" }
+    },
+    "bin": ["smoke-test.php"]
+}
