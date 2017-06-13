@@ -48,8 +48,13 @@ class SmokeTestCommand extends Command
                 new InputOption('env', null, InputOption::VALUE_OPTIONAL, 'The environment to boot the kernel in', 'dev'),
                 new InputOption('format', null, InputOption::VALUE_OPTIONAL, 'The format of the output', 'text'),
             ])
+            ->addUsage('/path/to/app/folder')
+            ->addUsage('/path/to/app/folder --autoload=autoload.php')
+            ->addUsage('/path/to/app/folder --kernel=AppKernel.php')
+            ->addUsage('/path/to/app/folder --env=dev')
+            ->addUsage('/path/to/app/folder --format=json')
             ->setHelp(<<<EOF
-The <info>%command.name%</info> command looks  for issues in your
+The <info>%command.name%</info> command looks for issues in the
 dependency injection container of your application kernel:
 
 <info>php %command.full_name% /path/to/app/folder</info>
@@ -202,7 +207,8 @@ EOF
 
     /**
      * @param string $process
-     * @throwsResultAdapterException
+     * @throws ProcessFailedException if the adapter did not finish successful
+     * @throws ResultException if the json result from the adapter was broken
      * @return array
      */
     private function getJsonFromAdapter(string $process): array

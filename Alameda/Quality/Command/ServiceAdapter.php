@@ -92,6 +92,9 @@ class ServiceAdapter
         };
     }
 
+    /**
+     * @return \Closure
+     */
     private static function getFormatter(): \Closure
     {
         return function (Options $options, $value) {
