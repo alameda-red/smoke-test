@@ -84,7 +84,7 @@ class ClockResultList implements \JsonSerializable
      *
      * @param array $result
      */
-    public function add(array $result): void
+    public function add(array $result)
     {
         $result = $this->resolver->resolve($result);
 
@@ -108,7 +108,7 @@ class ClockResultList implements \JsonSerializable
      * @param string $id
      * @param float $elapsed in ms
      */
-    private function addSuccessful(string $id, float $elapsed): void
+    private function addSuccessful(string $id, float $elapsed)
     {
         $this->successful[] = [
             'id' => $id,
@@ -122,7 +122,7 @@ class ClockResultList implements \JsonSerializable
      * @param string $id
      * @param string $message
      */
-    private function addFailed(string $id, string $message): void
+    private function addFailed(string $id, string $message)
     {
         $this->failed[] = [
             'id' => $id,
@@ -136,7 +136,7 @@ class ClockResultList implements \JsonSerializable
      * @param string $id
      * @param string $scope
      */
-    private function addInactive(string $id, string $scope): void
+    private function addInactive(string $id, string $scope)
     {
         $this->inactive[] = [
             'id' => $id,
