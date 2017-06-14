@@ -53,7 +53,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class JsonFormatter implements FormatterInterface
 {
     /** @inheritdoc */
-    public function displayResults(OutputInterface $output, ClockResultList $result): void
+    public function displayResults(OutputInterface $output, ClockResultList $result)
     {
         $output->write(json_encode($result, JSON_PRETTY_PRINT));
     }

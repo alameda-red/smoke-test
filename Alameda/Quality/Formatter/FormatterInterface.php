@@ -27,5 +27,5 @@ interface FormatterInterface
      * @param OutputInterface $output
      * @param ClockResultList $result
      */
-    public function displayResults(OutputInterface $output, ClockResultList $result): void;
+    public function displayResults(OutputInterface $output, ClockResultList $result);
 }

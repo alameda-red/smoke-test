@@ -24,7 +24,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class TextFormatter implements FormatterInterface
 {
     /** @inheritdoc */
-    public function displayResults(OutputInterface $output, ClockResultList $result): void
+    public function displayResults(OutputInterface $output, ClockResultList $result)
     {
         $io = new SymfonyStyle(new ArrayInput([]), $output);
         $io->title('Smoke Test');
@@ -39,7 +39,7 @@ class TextFormatter implements FormatterInterface
      * @param SymfonyStyle $io
      * @param ClockResultList $result
      */
-    private function outputSuccessfulServices(SymfonyStyle $io, ClockResultList $result): void
+    private function outputSuccessfulServices(SymfonyStyle $io, ClockResultList $result)
     {
         $io->section('Successful Services');
 
@@ -52,13 +52,21 @@ class TextFormatter implements FormatterInterface
      * @param SymfonyStyle $io
      * @param ClockResultList $result
      */
-    private function outputFailedServices(SymfonyStyle $io, ClockResultList $result): void
+    private function outputFailedServices(SymfonyStyle $io, ClockResultList $result)
     {
         $io->section('Failed Services');
 
         if ($result->hasFailedServices()) {
-            if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+            if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERY_VERBOSE) {
                 $io->table(['id', 'error'], $result->getFailedServices());
+            } elseif ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                $io->table(['id', 'error'], array_map(function (array $e) {
+                    if (80 < strlen($e['message'])) {
+                        $e['message'] = substr($e['message'], 0, 77) . '...';
+                    }
+
+                    return $e;
+                }, $result->getFailedServices()));
             }
 
             $io->error(sprintf('Found %d failed services', $result->countFailedServices()));
@@ -71,7 +79,7 @@ class TextFormatter implements FormatterInterface
      * @param SymfonyStyle $io
      * @param ClockResultList $result
      */
-    private function outputInactiveServices(SymfonyStyle $io, ClockResultList $result): void
+    private function outputInactiveServices(SymfonyStyle $io, ClockResultList $result)
     {
         $io->section('Inactive Services');
 
@@ -96,7 +104,7 @@ class TextFormatter implements FormatterInterface
      * @param SymfonyStyle $io
      * @param ClockResultList $result
      */
-    private function outputStatistics(SymfonyStyle $io, ClockResultList $result): void
+    private function outputStatistics(SymfonyStyle $io, ClockResultList $result)
     {
         $io->section('Statistics');
 
