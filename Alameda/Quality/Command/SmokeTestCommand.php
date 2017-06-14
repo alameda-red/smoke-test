@@ -127,14 +127,28 @@ EOF
 
             /** @var string $serviceId */
             foreach ($services as $serviceId) {
-                $data = $this->getResultFromKernelAdapter(
-                    $input->getOption('kernel'),
-                    $input->getOption('autoload'),
-                    $input->getOption('env'),
-                    $serviceId
-                );
+                try {
+                    $data = $this->getResultFromKernelAdapter(
+                        $input->getOption('kernel'),
+                        $input->getOption('autoload'),
+                        $input->getOption('env'),
+                        $serviceId
+                    );
 
-                $result->add($data);
+                    $result->add($data);
+                } catch (ProcessFailedException $e) {
+                    $process = $e->getProcess();
+                    $data = [
+                        'id' => $serviceId,
+                        'status' => 'fatal',
+                        'error' => $this->extractPhpErrorMessage($process->getErrorOutput()),
+                        'scope' => null,
+                        'time' => null,
+                    ];
+
+                    $result->add($data);
+                }
+
             }
         } catch (ResultException $e) {
             $output->writeln($this->getHelperSet()->get('formatter')->formatBlock(
@@ -227,5 +241,16 @@ EOF
         }
 
         return $result;
+    }
+
+    /**
+     * @param string $error
+     * @return string
+     */
+    private function extractPhpErrorMessage(string $error): string
+    {
+        $stackTraceBegin = strstr($error, 'Stack trace:');
+
+        return substr($error, 0, - strlen($stackTraceBegin) - 1);
     }
 }

@@ -80,7 +80,9 @@ register_shutdown_function(function () {
     if( $error !== null) {
         $result['error'] = $error['message'];
         $result['status'] = 'fatal';
-        echo $result . PHP_EOL;
+
+        echo (is_string($result)) ? $result : implode(PHP_EOL, $result);
+        echo PHP_EOL;
 
         exit(STATUS_OK);
     }
