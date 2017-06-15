@@ -11,8 +11,16 @@ Usage
 
 Clone the repository to a directory of your choice and run it from there:
 
-     $ php smoke-test.php quality:smoke-test /path/to/app/folder
+     $ git clone https://github.com/alameda-red/smoke-test.git
+     $ cd smoke-test
+     $ php smoke-test quality:smoke-test /path/to/app/folder
 
 For further options run:
 
-    $ php smoke-test.php quality:smoke-test --help
+    $ php smoke-test quality:smoke-test --help
+
+You can build a phar file using [`box-project/box2`][1]. Use it:
+
+     $ php smoke-test.phar quality:smoke-test /path/to/app/folder
+
+[1]: https://github.com/box-project/box2

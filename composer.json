@@ -2,6 +2,8 @@
     "name": "alameda/smoke-test",
     "description": "A tool to boot your Symfony application and check your services",
     "license": "MIT",
+    "keywords": ["symfony", "container", "dependency injection", "smoke-test", "testing", "AppKernel"],
+    "homepage": "https://github.com/alameda-red/smoke-test",
     "authors": [
         {
             "name": "Sebastian Kuhlmann",
@@ -17,5 +19,6 @@
     "autoload": {
         "psr-4": { "Alameda\\Quality\\": "Alameda/Quality" }
     },
-    "bin": ["smoke-test.php"]
+    "bin": ["smoke-test"],
+    "prefer-stable": true
 }

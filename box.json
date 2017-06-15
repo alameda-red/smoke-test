@@ -1,0 +1,27 @@
+{
+  "output": "smoke-test.phar",
+  "chmod": "0755",
+  "compactors": [
+    "Herrera\\Box\\Compactor\\Php"
+  ],
+  "extract": false,
+  "main": "smoke-test",
+  "files": [
+    "LICENSE",
+    "clock_service_adapter.php",
+    "foreign_kernel_adapter.php"
+  ],
+  "finder": [
+    {
+      "name": "*.*",
+      "exclude": ["Tests"],
+      "in": "vendor"
+    },
+    {
+      "name": ["*.*", "*.crt"],
+      "in": "Alameda"
+    }
+  ],
+  "stub": true,
+  "web": false
+}
