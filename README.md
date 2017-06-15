@@ -1,7 +1,7 @@
 Alameda Smoke Test
 ==================
 
-Te Alameda Smoke Test is a command line tool that checks if your
+The Alameda Smoke Test is a command line tool that checks if your
 application has major problems within your dependency injection
 container. It will boot your AppKernel and will attempt to create
 an instance of each and every service known to the container.
