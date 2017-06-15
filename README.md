@@ -13,6 +13,7 @@ Clone the repository to a directory of your choice and run it from there:
 
      $ git clone https://github.com/alameda-red/smoke-test.git
      $ cd smoke-test
+     $ php composer.phar install
      $ php smoke-test quality:smoke-test /path/to/app/folder
 
 For further options run:
