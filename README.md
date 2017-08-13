@@ -19,9 +19,3 @@ Clone the repository to a directory of your choice and run it from there:
 For further options run:
 
     $ php smoke-test quality:smoke-test --help
-
-You can build a phar file using [`box-project/box2`][1]. Use it:
-
-     $ php smoke-test.phar quality:smoke-test /path/to/app/folder
-
-[1]: https://github.com/box-project/box2
