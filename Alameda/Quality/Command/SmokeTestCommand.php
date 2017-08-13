@@ -28,10 +28,17 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
  */
 class SmokeTestCommand extends Command
 {
+    /** @var integer */
     const STATUS_OK = 0;
-    const STATUS_CONFIGURATION_ERROR = 1;
-    const STATUS_KERNEL_ADAPTER_ERROR = 2;
-    const STATUS_KERNEL_ADAPTER_RESULT_ERROR = 3;
+
+    /** @var integer */
+    const STATUS_CONFIGURATION_ERROR = 80;
+
+    /** @var integer */
+    const STATUS_KERNEL_ADAPTER_ERROR = 81;
+
+    /** @var integer */
+    const STATUS_KERNEL_ADAPTER_RESULT_ERROR = 82;
 
     /** @var FormatterInterface */
     private $formatter;
@@ -43,13 +50,13 @@ class SmokeTestCommand extends Command
             ->setName('quality:smoke-test')
             ->setDefinition([
                 new InputArgument('app', InputArgument::REQUIRED, 'The path to the directory with your kernel'),
-                new InputOption('autoload', null, InputOption::VALUE_OPTIONAL, 'The name of your autoload file', 'autoload.php'),
+                new InputOption('autoload', null, InputOption::VALUE_OPTIONAL, 'The path to the directory with your autoload file', 'vendor'),
                 new InputOption('kernel', null, InputOption::VALUE_OPTIONAL, 'The name of your kernel file', 'AppKernel.php'),
                 new InputOption('env', null, InputOption::VALUE_OPTIONAL, 'The environment to boot the kernel in', 'dev'),
                 new InputOption('format', null, InputOption::VALUE_OPTIONAL, 'The format of the output', 'text'),
             ])
             ->addUsage('/path/to/app/folder')
-            ->addUsage('/path/to/app/folder --autoload=autoload.php')
+            ->addUsage('/path/to/app/folder --autoload=/path/to/vendor/folder')
             ->addUsage('/path/to/app/folder --kernel=AppKernel.php')
             ->addUsage('/path/to/app/folder --env=dev')
             ->addUsage('/path/to/app/folder --format=json')
@@ -59,9 +66,9 @@ dependency injection container of your application kernel:
 
 <info>php %command.full_name% /path/to/app/folder</info>
 
-You can also pass the name of an <info>autoload.php</info> file as an option:
+You can also pass the path the path to your <info>autoload.php</info> file as an option:
 
-<info>php %command.full_name% /path/to/app/folder --autoload=autoload.php</info>
+<info>php %command.full_name% /path/to/app/folder --autoload=/path/to/vendor/folder</info>
 
 You can further more pass the path to a <info>kernel</info> file name as an option: 
 
@@ -77,6 +84,12 @@ You can choose the <info>format</info> of the result output:
 <info>php %command.full_name% /path/to/app/folder --format=json</info>
 
 For further information on the output format of the JSON, see the \Alameda\Quality\Formatter\JsonFormatter class.
+
+In case of errors the command will exit with a custom exit code. These codes are:
+
+<error>80</error> if there was a configuration error
+<error>81</error> if the kernel adapter yielded an error
+<error>82</error> if the result from an adapter is not readable
 EOF
             )
         ;
@@ -185,12 +198,15 @@ EOF
         \SplFileInfo $autoload,
         string $environment): array
     {
-        $process = sprintf(
-            'php foreign_kernel_adapter.php %s %s %s',
+        $adapter = ADAPTER_DIRECTORY . 'foreign_kernel_adapter.php';
+
+        $process = implode(' ', [
+            PHP_BINARY,
+            $adapter,
             $autoload->getRealPath(),
             $kernel->getRealPath(),
             $environment
-        );
+        ]);
 
         return $this->getJsonFromAdapter($process);
     }
@@ -208,13 +224,16 @@ EOF
         string $environment,
         string $serviceId): array
     {
-        $process = sprintf(
-            'php clock_service_adapter.php %s %s %s %s',
+        $adapter = ADAPTER_DIRECTORY . 'clock_service_adapter.php';
+
+        $process = implode(' ', [
+            PHP_BINARY,
+            $adapter,
             $autoload->getRealPath(),
             $kernel->getRealPath(),
             $environment,
             $serviceId
-        );
+        ]);
 
         return $this->getJsonFromAdapter($process);
     }

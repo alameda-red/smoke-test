@@ -63,11 +63,18 @@ class ClockResultList implements \JsonSerializable
             'scope',
             'error',
         ]);
+        $resolver->setDefaults([
+            'file' => null,
+            'line' => null,
+            'trace' => [],
+        ]);
+        $resolver->addAllowedTypes('file', ['string', 'null']);
+        $resolver->addAllowedTypes('line', ['int', 'null']);
         $resolver->addAllowedValues('status', [
             'successful',
             'failed',
             'inactive',
-            'fatal'
+            'fatal',
         ]);
         $resolver->addAllowedValues('id', function ($value) {
             return is_string($value);
@@ -94,7 +101,13 @@ class ClockResultList implements \JsonSerializable
                 break;
             case 'fatal': // fall-through intended
             case 'failed':
-                $this->addFailed($result['id'], $result['error']);
+                $this->addFailed(
+                    $result['id'],
+                    $result['error'],
+                    $result['file'],
+                    $result['line'],
+                    $result['trace']
+                );
                 break;
             case 'inactive':
                 $this->addInactive($result['id'], $result['scope']);
@@ -121,12 +134,18 @@ class ClockResultList implements \JsonSerializable
      *
      * @param string $id
      * @param string $message
+     * @param string $file
+     * @param integer $line
+     * @param array $trace
      */
-    private function addFailed(string $id, string $message)
+    private function addFailed(string $id, string $message, string $file = null, int $line = null, array $trace = [])
     {
         $this->failed[] = [
             'id' => $id,
-            'message' => $message
+            'message' => $message,
+            'file' => $file,
+            'line' => $line,
+            'trace' => $trace,
         ];
     }
 

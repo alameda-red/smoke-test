@@ -28,6 +28,8 @@ if ((!$loader = includeIfExists(__DIR__.'/vendor/autoload.php')) &&
 use Symfony\Component\Console\Application;
 use Alameda\Quality\Command\SmokeTestCommand;
 
-$console = new Application('Alameda Smoke Test', '1.0.0-alpha');
+const ADAPTER_DIRECTORY = __DIR__ . DIRECTORY_SEPARATOR;
+
+$console = new Application('Alameda Smoke Test', '1.0.0-beta');
 $console->add(new SmokeTestCommand());
 $console->run();

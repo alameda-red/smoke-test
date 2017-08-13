@@ -112,6 +112,9 @@ try {
 } catch (\Exception $e) {
     $result['status'] = 'failed';
     $result['error'] = $e->getMessage();
+    $result['file'] = $e->getFile();
+    $result['line'] = $e->getLine();
+    $result['trace'] = $e->getTrace();
 }
 
 echo json_encode($result) . PHP_EOL;

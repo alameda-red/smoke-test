@@ -36,7 +36,25 @@ use Symfony\Component\Console\Output\OutputInterface;
  *      "failed": [
  *          {
  *              "id": "foo.service",
- *              "message": "An exception occured in driver: SQLSTATE[HY000] [2002] Connection refused"
+ *              "message": "Some exception occured",
+ *              "file": "\/path\/to\/a\/file.php",
+ *              "line": 1,
+ *              "trace": [
+ *                  {
+ *                      "file": "\/path\/to\/a\/file.php",
+ *                      "line": 1,
+ *                      "function": "foo",
+ *                      "class": "Bar",
+ *                      "type": "->",
+ *                      "args": [
+ *                          "Some exception occured",
+ *                          {
+ *                              "errorInfo": null
+ *                          }
+ *                      ]
+ *                  },
+ *                  ...
+ *              ]
  *          },
  *      ],
  *      "inactive": [

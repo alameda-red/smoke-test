@@ -56,23 +56,32 @@ class TextFormatter implements FormatterInterface
     {
         $io->section('Failed Services');
 
-        if ($result->hasFailedServices()) {
-            if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERY_VERBOSE) {
-                $io->table(['id', 'error'], $result->getFailedServices());
-            } elseif ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
-                $io->table(['id', 'error'], array_map(function (array $e) {
-                    if (80 < strlen($e['message'])) {
-                        $e['message'] = substr($e['message'], 0, 77) . '...';
-                    }
-
-                    return $e;
-                }, $result->getFailedServices()));
-            }
-
-            $io->error(sprintf('Found %d failed services', $result->countFailedServices()));
-        } else {
+        if (!$result->hasFailedServices()) {
             $io->success('No failed services found');
+
+            return;
         }
+
+        // hide additional fields from the output
+        $failed = array_map(function ($e) {
+            unset($e['file'], $e['line'], $e['trace']);
+
+            return $e;
+        }, $result->getFailedServices());
+
+        if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERY_VERBOSE) {
+            $io->table(['id', 'error'], $failed);
+        } elseif ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+            $io->table(['id', 'error'], array_map(function (array $e) {
+                if (80 < strlen($e['message'])) {
+                    $e['message'] = substr($e['message'], 0, 77) . '...';
+                }
+
+                return $e;
+            }, $failed));
+        }
+
+        $io->error(sprintf('Found %d failed services', $result->countFailedServices()));
     }
 
     /**
@@ -83,21 +92,23 @@ class TextFormatter implements FormatterInterface
     {
         $io->section('Inactive Services');
 
-        if ($result->hasInactiveServices()) {
-            if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
-                $io->note('Found inactive services');
-                $io->table(['id', 'scope'], array_map(function ($id, $scope) {
-                    return [$id, $scope];
-                },
-                    array_column($result->getInactiveServices(), 'id'),
-                    array_column($result->getInactiveServices(), 'scope')
-                ));
-            }
-
-            $io->text(sprintf('Found %d inactive services', $result->countInactiveServices()));
-        } else {
+        if (!$result->hasInactiveServices()) {
             $io->success('No inactive services found');
+
+            return;
         }
+
+        if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+            $io->note('Found inactive services');
+            $io->table(['id', 'scope'], array_map(function ($id, $scope) {
+                return [$id, $scope];
+            },
+                array_column($result->getInactiveServices(), 'id'),
+                array_column($result->getInactiveServices(), 'scope')
+            ));
+        }
+
+        $io->text(sprintf('Found %d inactive services', $result->countInactiveServices()));
     }
 
     /**
